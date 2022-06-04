@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">    
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/javascripts/main.js"></script>
+    <title>Post</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>PORTAL</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                
+                <li class="active">
+                    <a href="/newsfeed">Trang chủ</a>                 
+                </li>
+                <li class="active">
+                    <a href="/announcements">Tất cả thông báo</a>                 
+                </li>
+                <% if(user.role != 'falcuty') { %> 
+                <li class="active" >
+                    <a class="active" data-toggle="collapse" href="#chinhsuathongtin" role="button" aria-expanded="false" aria-controls="chinhsuathongtin">
+                        Chỉnh sửa thông tin
+                    </a>                
+                </li>
+                <% } %> 
+                <% if(user.role == 'falcuty' || user.role == 'admin') { %> 
+                    <li class="active" >
+                        <a class="active" data-toggle="collapse" href="#updatePassword" role="button" aria-expanded="false" aria-controls="updatePassword">
+                            Update Password
+                        </a>                
+                    </li>
+                <% } %> 
+                <% if(user.role == 'admin') { %> 
+                    <li class="active" >
+                        <a class="active" data-toggle="collapse" href="#createAccount" role="button" aria-expanded="false" aria-controls="updatePassword">
+                            Tạo Tài Khoản Mới
+                        </a>                
+                    </li>
+                <% } %> 
+                <li class="active" >
+                    <a data-toggle="modal" data-target="#exampleModal">Tạo bài viết</a>
+                </li>
+                <% if(user.role != 'student') { %> 
+                <li class="active" >
+                    <a data-toggle="modal" data-target="#createAnnouncements">Tạo thông báo</a>
+                </li>
+                <% } %>
+                <li class="active" >
+                    <a href="/logout">Đăng xuất</a>
+                </li>
+            </ul>
+
+        
+        </nav>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-titler" id="exampleModalLabel">Nhập post</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/newsfeed/writeFeed" method="POST">
+                        <textarea type="text" class="form-control mb-3" name="content" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="createAnnouncements" tabindex="-1" role="dialog" aria-labelledby="createAnnouncementsLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-titler" id="createAnnouncementsLabel">Nhập Nội Dung Thông Báo</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/newsfeed/createAnnouncement" method="POST">
+                        <span>Title</span><br>
+                        <input type="text" name="title" id="annotitle"><br>
+                        <span>Content</span><br>
+                        <textarea type="text" class="form-control mb-3" name="announcement" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea><br>
+                        <span>Falcuty</span><br>
+                        <input type="text" name="falcuty" id="falcuty"><br>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Thu gọn</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>                   
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="collapse" id="chinhsuathongtin">
+                        <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#chinhsuathongtin" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                        <form class="container-fluid" action="/UpdateAccount" method="POST">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Name</label>
+                              <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your name">
+                              <small id="emailHelp" class="form-text text-muted">Ví dụ: Luân Vip Pro</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Class</label>
+                                <input type="text" name="lop" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter class">
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Falcuty</label>
+                                <input type="text" name="falcuty" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty">
+                              </div>
+                            <div class="form-group">
+                              <label for="exampleInputPassword1">Avatar link</label>
+                              <input type="text" name="avatar" class="form-control" id="exampleInputPassword1" placeholder="Image url( Using copy image link)">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                          </form>
+                    </div>
+                    <div class="collapse" id="updatePassword">
+                        <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#updatePassword" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                        <form class="container-fluid" action="/changePassword" method="POST">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Old Password</label>
+                              <input type="password" name="oldpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">New Password</label>
+                                <input type="password" name="newpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter class">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                          </form>
+                    </div>
+                    <div class="collapse" id="createAccount">
+                        <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#createAccount" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                        <form class="container-fluid" action="/createAccount" method="POST">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Email</label>
+                              <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Class</label>
+                                <input type="password" name="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter password" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Falcuty</label>
+                                <input type="text" name="falcuty" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Name</label>
+                                <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty" required>
+                              </div>
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                          </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">              
+
+                <div class="col-4">
+                    <div class="list-group list-group-flush">
+                        <% if(announcements) {announcements.reverse(); announcements.forEach(e => { %> 
+                        <a href="/announcements/<%= e._id %>" class="list-group-item list-group-item-action">
+                            <div class="content_text">
+                                <h6><%= e.title %></h6>
+                                <p class="txt"><%= e.announcement %></p>
+                            </div>
+                        </a>
+                        <% })} %>
+                    </div>
+                </div>
+
+
+                <div class="col-8">
+                    <% if(news) {news.reverse(); news.forEach(post => { %>
+                        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-titler" id="exampleModalLabel">Update Your Feel</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <textarea type="text" class="form-control mb-3 updateContent" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" data-id="<%= post._id %> " class="btn btn-primary updatefeed">Save changes</button>
+                                    </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    <div class="post_wrapper">
+                        <% if(post.author == user.name || user.role == 'admin') { %> 
+                        <div class="header_wrapper text-right">
+                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModal">Sửa</button>
+                            <button type="button" data-id="<%= post._id %>" class="btn btn-danger btn-sm deletefeed">Xóa</button>
+                        </div>
+                        <% } %> 
+                        <div class="content_text">
+                          <h5><a href="/newsfeed/<%= post.author %>"><%= post.author %></a></h5>
+                          <p class="txt"><%= post.newsfeed %></p>
+                          <div class="line_separator" ></div>
+                          <span class="date"><%= post.createAt %></span> 
+                          
+                          <a data-toggle="collapse" href="#comments<%= post._id %>" role="button" aria-expanded="false" aria-controls="comments<%= post._id %>"><span class="pull-right readmore">Comments</span></a>
+
+                            <div class="collapse"  id="comments<%= post._id %>" >                          
+                                <div class="input-group mb-3 mt-3">
+                                    <input type="text" class="form-control commentContent<%= post._id %> " placeholder="Your comment here" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                      <button class="btn btn-success sendComment" data-id="<%= post._id %> " type="button">Bình luận</button>
+                                    </div>
+                                </div>
+                                <% if(comments) {comments.reverse(); comments.forEach(comment => { %>
+                                  <% if(comment.postid == post._id || true) { %>
+                                    <div class="post_wrapper" >
+                                      <% if(comment.author == user.name || user.role == 'admin') { %> 
+                                        <div class="header_wrapper text-right">
+                                            <button type="button" data-id="<%= comment._id %> " class="btn btn-danger btn-sm deletecomment">Xóa</button>
+                                        </div>
+                                      <% } %> 
+                                      <h5><%= comment.author %></h5>
+                                      <span class="date"><%= comment.createAt %></span>
+                                      <p class="txt"><%= comment.comment %></p>
+                                  </div>
+                                    
+                                  <% } %>
+                                <% })} %>
+                            </div>
+                        </div>
+                    </div>
+                    <% })} %>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

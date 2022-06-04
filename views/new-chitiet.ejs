@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/javascripts/main.js"></script>
+    <title>Post</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>PORTAL</h3>
+            </div>
+
+            <ul class="list-unstyled components">
+                
+                <li class="active">
+                    <a href="/newsfeed">Trang chủ</a>                 
+                </li>
+                <li class="active">
+                    <a href="/announcements">Tất cả thông báo</a>                 
+                </li>
+                <% if(user.role != 'falcuty') { %> 
+                <li class="active" >
+                    <a class="active" data-toggle="collapse" href="#chinhsuathongtin" role="button" aria-expanded="false" aria-controls="chinhsuathongtin">
+                        Chỉnh sửa thông tin
+                    </a>                
+                </li>
+                <% } %> 
+                <% if(user.role == 'falcuty' || user.role == 'admin') { %> 
+                    <li class="active" >
+                        <a class="active" data-toggle="collapse" href="#updatePassword" role="button" aria-expanded="false" aria-controls="updatePassword">
+                            Update Password
+                        </a>                
+                    </li>
+                <% } %> 
+                <% if(user.role == 'admin') { %> 
+                    <li class="active" >
+                        <a class="active" data-toggle="collapse" href="#createAccount" role="button" aria-expanded="false" aria-controls="updatePassword">
+                            Tạo Tài Khoản Mới
+                        </a>                
+                    </li>
+                <% } %> 
+                <li class="active" >
+                    <a data-toggle="modal" data-target="#exampleModal">Tạo bài viết</a>
+                </li>
+                <% if(user.role != 'student') { %> 
+                <li class="active" >
+                    <a data-toggle="modal" data-target="#createAnnouncements">Tạo thông báo</a>
+                </li>
+                <% } %>
+                <li class="active" >
+                    <a href="/logout">Đăng xuất</a>
+                </li>
+            </ul>
+
+        
+        </nav>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-titler" id="exampleModalLabel">Nhập post</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/newsfeed/writeFeed" method="POST">
+                        <textarea type="text" class="form-control mb-3" name="content" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="createAnnouncements" tabindex="-1" role="dialog" aria-labelledby="createAnnouncementsLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-titler" id="createAnnouncementsLabel">Nhập Nội Dung Thông Báo</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/newsfeed/createAnnouncement" method="POST">
+                        <span>Title</span><br>
+                        <input type="text" name="title" id="annotitle"><br>
+                        <span>Content</span><br>
+                        <textarea type="text" class="form-control mb-3" name="announcement" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea><br>
+                        <span>Falcuty</span><br>
+                        <input type="text" name="falcuty" id="falcuty"><br>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Thu gọn</span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>                   
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="collapse" id="chinhsuathongtin">
+                        <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#chinhsuathongtin" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                        <form class="container-fluid" action="/UpdateAccount" method="POST">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Name</label>
+                              <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your name">
+                              <small id="emailHelp" class="form-text text-muted">Ví dụ: Luân Vip Pro</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Class</label>
+                                <input type="text" name="lop" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter class">
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Falcuty</label>
+                                <input type="text" name="falcuty" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty">
+                              </div>
+                            <div class="form-group">
+                              <label for="exampleInputPassword1">Avatar link</label>
+                              <input type="text" name="avatar" class="form-control" id="exampleInputPassword1" placeholder="Image url( Using copy image link)">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                          </form>
+                    </div>
+                    <div class="collapse" id="updatePassword">
+                        <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#updatePassword" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                        <form class="container-fluid" action="/changePassword" method="POST">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Old Password</label>
+                              <input type="password" name="oldpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">New Password</label>
+                                <input type="password" name="newpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter class">
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                          </form>
+                    </div>
+                    <div class="collapse" id="createAccount">
+                        <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#createAccount" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                        <form class="container-fluid" action="/createAccount" method="POST">
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Email</label>
+                              <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Class</label>
+                                <input type="password" name="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter password" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Falcuty</label>
+                                <input type="text" name="falcuty" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="exampleInputEmail1">Name</label>
+                                <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty" required>
+                              </div>
+                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                          </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <form action="/announcements/update/<%= announcements._id %>" method="POST">
+                            <div class="modal-body">
+                                <span>Title:</span><br>
+                                <input type="text" name="title" required><br>
+                                <span>Content</span><br>
+                                <textarea name="content" cols="30" rows="10" required></textarea><br>
+                                <span>Falcuty</span><br>
+                                <input type="text" name="falcuty" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="header_wrapper text-right">
+                    <% if(user.name == announcements.author || user.role == 'admin') { %> 
+                    <button type="button" data-toggle="modal" data-target="#modelId" class="btn btn-primary btn-sm updateannounce">Sửa</button>
+                    <button type="button" data-id="<%= announcements._id %> " class="btn btn-danger btn-sm deleteannounce">Xóa</button>
+                    <% } %> 
+                </div>
+                <p class="text h1"><%= announcements.title %> </p>
+                <p class="text body"><%= announcements.announcement %> </p>
+
+            </div>
+            
+            
+        </div>
+    </div>
+</body>
+</html>

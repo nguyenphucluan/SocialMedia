@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/stylesheet/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/javascripts/main.js"></script>
+    
+    <title>Post</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+          <div class="sidebar-header">
+              <h3>PORTAL</h3>
+          </div>
+
+          <ul class="list-unstyled components">
+              
+              <li class="active">
+                  <a href="/newsfeed">Trang chủ</a>                 
+              </li>
+              <li class="active">
+                  <a href="/announcements">Tất cả thông báo</a>                 
+              </li>
+              <% if(user.role != 'falcuty') { %> 
+              <li class="active" >
+                  <a class="active" data-toggle="collapse" href="#chinhsuathongtin" role="button" aria-expanded="false" aria-controls="chinhsuathongtin">
+                      Chỉnh sửa thông tin
+                  </a>                
+              </li>
+              <% } %> 
+              <% if(user.role == 'falcuty' || user.role == 'admin') { %> 
+                  <li class="active" >
+                      <a class="active" data-toggle="collapse" href="#updatePassword" role="button" aria-expanded="false" aria-controls="updatePassword">
+                          Update Password
+                      </a>                
+                  </li>
+              <% } %> 
+              <% if(user.role == 'admin') { %> 
+                  <li class="active" >
+                      <a class="active" data-toggle="collapse" href="#createAccount" role="button" aria-expanded="false" aria-controls="updatePassword">
+                          Tạo Tài Khoản Mới
+                      </a>                
+                  </li>
+              <% } %> 
+              <li class="active" >
+                  <a data-toggle="modal" data-target="#exampleModal">Tạo bài viết</a>
+              </li>
+              <% if(user.role != 'student') { %> 
+              <li class="active" >
+                  <a data-toggle="modal" data-target="#createAnnouncements">Tạo thông báo</a>
+              </li>
+              <% } %>
+              <li class="active" >
+                  <a href="/logout">Đăng xuất</a>
+              </li>
+          </ul>
+
+      
+      </nav>
+
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-titler" id="exampleModalLabel">Nhập post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <form action="/newsfeed/writeFeed" method="POST">
+                      <textarea type="text" class="form-control mb-3" name="content" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="createAnnouncements" tabindex="-1" role="dialog" aria-labelledby="createAnnouncementsLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-titler" id="createAnnouncementsLabel">Nhập Nội Dung Thông Báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <form action="/newsfeed/createAnnouncement" method="POST">
+                      <span>Title</span><br>
+                      <input type="text" name="title" id="annotitle"><br>
+                      <span>Content</span><br>
+                      <textarea type="text" class="form-control mb-3" name="announcement" placeholder="Bạn đang nghĩ gì nè cho mình biết với nha"></textarea><br>
+                      <span>Falcuty</span><br>
+                      <input type="text" name="falcuty" id="falcuty"><br>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <!-- Page Content  -->
+      <div id="content">
+
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="container-fluid">
+
+                  <button type="button" id="sidebarCollapse" class="btn btn-info">
+                      <i class="fas fa-align-left"></i>
+                      <span>Thu gọn</span>
+                  </button>
+                  <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                      <i class="fas fa-align-justify"></i>
+                  </button>                   
+              </div>
+          </nav>
+
+          <div class="row">
+              <div class="col-12">
+                  <div class="collapse" id="chinhsuathongtin">
+                      <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#chinhsuathongtin" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                      <form class="container-fluid" action="/UpdateAccount" method="POST">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Name</label>
+                            <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your name">
+                            <small id="emailHelp" class="form-text text-muted">Ví dụ: Luân Vip Pro</small>
+                          </div>
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Class</label>
+                              <input type="text" name="lop" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter class">
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Falcuty</label>
+                              <input type="text" name="falcuty" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty">
+                            </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">Avatar link</label>
+                            <input type="text" name="avatar" class="form-control" id="exampleInputPassword1" placeholder="Image url( Using copy image link)">
+                          </div>
+                          
+                          <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                        </form>
+                  </div>
+                  <div class="collapse" id="updatePassword">
+                      <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#updatePassword" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                      <form class="container-fluid" action="/changePassword" method="POST">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Old Password</label>
+                            <input type="password" name="oldpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your name">
+                          </div>
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">New Password</label>
+                              <input type="password" name="newpassword" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter class">
+                          </div>
+                          <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                        </form>
+                  </div>
+                  <div class="collapse" id="createAccount">
+                      <button class="btn btn-sm mb-3 ml-3 btn-secondary" type="button" data-toggle="collapse" data-target="#createAccount" aria-expanded="false" aria-controls="chinhsuathongtin"><i class="fas fa-times"></i></button>
+
+                      <form class="container-fluid" action="/createAccount" method="POST">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Email</label>
+                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email" required>
+                          </div>
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Class</label>
+                              <input type="password" name="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter password" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Falcuty</label>
+                              <input type="text" name="falcuty" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Name</label>
+                              <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter falcuty" required>
+                            </div>
+                          <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                        </form>
+                  </div>
+              </div>
+          </div>
+        <!-- Page Content  -->
+        <div id="content">
+
+            
+
+            <div class="container-fluid">
+                <div class="header_wrap">
+                  <div class="num_rows">
+                  
+                          <div class="form-group"> 	<!--		Show Numbers Of Rows 		-->
+                               <select class  ="form-control" name="state" id="maxRows">
+                                   
+                                   
+                                   <option value="10">10</option>
+                                   <option value="15">15</option>
+                                   <option value="20">20</option>
+                                   <option value="50">50</option>
+                                   <option value="70">70</option>
+                                   <option value="100">100</option>
+                      <option value="5000">Show ALL Rows</option>
+                                  </select>
+                               
+                            </div>
+                  </div>
+                  <div class="tb_search">
+          <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+                  </div>
+                </div>
+          <table class="table table-striped table-class" id= "table-id">
+            
+              
+          <thead>
+          <tr>
+                  <th>News</th>
+                  
+              </tr>
+            </thead>
+          <tbody>
+            <% if(announcements) {announcements.reverse(); announcements.forEach(e => { %> 
+              <tr>
+                  <td>
+                        <a href="/announcements/<%= e._id %> " target="_blank" class="text-decoration-none" rel="noopener noreferrer">
+                            <p class="text h5"><%= e.title %></p>
+                            <p class="text body text-left"><%= e.announcement %></p>
+                        </a>
+                  </td>
+              </tr>
+              <% })} %>
+            <tbody>
+          </table>
+          <ul class="pagination justify-content-center">
+            <li data-page="prev" class="page-item">
+                <span> <span class=" page-link sr-only">(current)</span></span>
+            </li>
+            
+            <li data-page="next" id="prev" class="page-item">
+                <span> <span class="page-link sr-only">(current)</span></span>
+            </li>
+        </ul>
+                <div class="rows_count">Showing 11 to 20 of 91 entries</div>
+          
+          </div>
+            
+        </div>
+    </div>
+  <script src="client.js"></script> 
+  <script>
+    getPagination('#table-id');
+	$('#maxRows').trigger('change');
+	function getPagination (table){
+
+		  $('#maxRows').on('change',function(){
+		  	$('.pagination').html('');						// reset pagination div
+		  	var trnum = 0 ;									// reset tr counter 
+		  	var maxRows = parseInt($(this).val());			// get Max Rows from select option
+        
+		  	var totalRows = $(table+' tbody tr').length;		// numbers of rows 
+			 $(table+' tr:gt(0)').each(function(){			// each TR in  table and not the header
+			 	trnum++;									// Start Counter 
+			 	if (trnum > maxRows ){						// if tr number gt maxRows
+			 		
+			 		$(this).hide();							// fade it out 
+			 	}if (trnum <= maxRows ){$(this).show();}// else fade in Important in case if it ..
+			 });											//  was fade out to fade it in 
+			 if (totalRows > maxRows){						// if tr total rows gt max rows option
+			 	var pagenum = Math.ceil(totalRows/maxRows);	// ceil total(rows/maxrows) to get ..  
+			 												//	numbers of pages 
+			 	for (var i = 1; i <= pagenum ;){			// for each page append pagination li 
+			 	$('.pagination').append('<li data-page="'+i+'">\
+								      <span>'+ i++ +'<span class="sr-only">(current)</span></span>\
+								    </li>').show();
+			 	}											// end for i 
+     
+         
+			} 												// end if row count > max rows
+			$('.pagination li:first-child').addClass('active'); // add active class to the first li 
+        
+        
+        //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+       showig_rows_count(maxRows, 1, totalRows);
+        //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+        $('.pagination li').on('click',function(e){		// on click each page
+        e.preventDefault();
+				var pageNum = $(this).attr('data-page');	// get it's number
+				var trIndex = 0 ;							// reset tr counter
+				$('.pagination li').removeClass('active');	// remove active class from all li 
+				$(this).addClass('active');					// add active class to the clicked 
+        
+        
+        //SHOWING ROWS NUMBER OUT OF TOTAL
+       showig_rows_count(maxRows, pageNum, totalRows);
+        //SHOWING ROWS NUMBER OUT OF TOTAL
+        
+        
+        
+				 $(table+' tr:gt(0)').each(function(){		// each tr in table not the header
+				 	trIndex++;								// tr index counter 
+				 	// if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+				 	if (trIndex > (maxRows*pageNum) || trIndex <= ((maxRows*pageNum)-maxRows)){
+				 		$(this).hide();		
+				 	}else {$(this).show();} 				//else fade in 
+				 }); 										// end of for each tr in table
+					});										// end of on click pagination list
+		});
+											// end of on select change 
+		 
+								// END OF PAGINATION 
+    
+	}	
+
+
+			
+
+// SI SETTING
+$(function(){
+	// Just to append id number for each row  
+default_index();
+					
+});
+
+//ROWS SHOWING FUNCTION
+function showig_rows_count(maxRows, pageNum, totalRows) {
+   //Default rows showing
+        var end_index = maxRows*pageNum;
+        var start_index = ((maxRows*pageNum)- maxRows) + parseFloat(1);
+        var string = 'Showing '+ start_index + ' to ' + end_index +' of ' + totalRows + ' entries';               
+        $('.rows_count').html(string);
+}
+
+// CREATING INDEX
+function default_index() {
+  $('table tr:eq(0)').prepend('<th> ID </th>')
+
+					var id = 0;
+
+					$('table tr:gt(0)').each(function(){	
+						id++
+						$(this).prepend('<td>'+id+'</td>');
+					});
+}
+
+// All Table search script
+function FilterkeyWord_all_table() {
+  
+// Count td if you want to search on all table instead of specific column
+
+  var count = $('.table').children('tbody').children('tr:first-child').children('td').length; 
+
+        // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("search_input_all");
+  var input_value =     document.getElementById("search_input_all").value;
+    filter = input.value.toLowerCase();
+  if(input_value !=''){
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 1; i < tr.length; i++) {
+          
+          var flag = 0;
+           
+          for(j = 0; j < count; j++){
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+             
+                var td_text = td.innerHTML;  
+                if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                //var td_text = td.innerHTML;  
+                //td.innerHTML = 'shaban';
+                  flag = 1;
+                } else {
+                  //DO NOTHING
+                }
+              }
+            }
+          if(flag==1){
+                     tr[i].style.display = "";
+          }else {
+             tr[i].style.display = "none";
+          }
+        }
+    }else {
+      //RESET TABLE
+      $('#maxRows').trigger('change');
+    }
+}
+ </script> 
+</body>
+</html>
